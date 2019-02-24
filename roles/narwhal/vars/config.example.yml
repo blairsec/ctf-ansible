@@ -1,0 +1,7 @@
+narwhal_url: "narwhal.example.com"
+narwhal_secret: "..."
+challenge_wildcard_url: "http://*.chall.example.com"
+
+registry_username: "..."
+registry_password: "..."
+registry_url: "registry.example.com"

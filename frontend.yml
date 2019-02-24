@@ -1,0 +1,53 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  include_vars: vars/frontend.yml
+  tasks:
+  - name: download v-ctf
+    git:
+      repo: https://github.com/blairsec/v-ctf.git
+      dest: /tmp/v-ctf
+      force: true
+  - name: download v-ctf themes
+    git:
+      repo: https://github.com/blairsec/v-ctf-themes.git
+      dest: /tmp/v-ctf-themes
+  - name: copy 2018 theme
+    copy:
+      src: /tmp/v-ctf-themes/2018/
+      dest: /tmp/v-ctf/src/theme
+  - name: install packages
+    npm:
+      path: /tmp/v-ctf
+  - name: build v-ctf
+    shell: cd /tmp/v-ctf && env VUE_APP_API_URL={{ api_url }} VUE_APP_SHELL_URL={{ shell_url }} VUE_APP_WEB_SHELL_URL={{ web_shell_url }} VUE_APP_COMPETITION_SUBDOMAINS={{ competition_subdomains }} npm run build
+  - name: upload 2018 to s3
+    shell: aws s3 sync --delete /tmp/v-ctf/dist s3://actf-2018
+  - name: invalidate cloudfront cache
+    shell: aws cloudfront create-invalidation --distribution-id=E14JAZDK72HCIK --paths /
+  - name: clear theme
+    shell: rm -r /tmp/v-ctf/src/theme/*
+  - name: copy 2017 theme
+    copy:
+      src: /tmp/v-ctf-themes/2017/
+      dest: /tmp/v-ctf/src/theme
+  - name: build v-ctf
+    shell: cd /tmp/v-ctf && env VUE_APP_API_URL={{ api_url }} VUE_APP_SHELL_URL={{ shell_url }} VUE_APP_WEB_SHELL_URL={{ web_shell_url }} VUE_APP_COMPETITION_SUBDOMAINS={{ competition_subdomains }} npm run build
+  - name: upload 2017 to s3
+    shell: aws s3 sync --delete /tmp/v-ctf/dist s3://actf-2017
+  - name: invalidate cloudfront cache
+    shell: aws cloudfront create-invalidation --distribution-id=E3INZH2590MUAO --paths /
+  - name: download ctfjs-admin
+    git:
+      repo: https://github.com/blairsec/ctfjs-admin.git
+      dest: /tmp/ctfjs-admin
+      force: true
+  - name: install packages
+    npm:
+      path: /tmp/ctfjs-admin
+  - name: build ctfjs-admin
+    shell: cd /tmp/ctfjs-admin && env VUE_APP_API_URL={{ api_url }} npm run build
+  - name: upload admin to s3
+    shell: aws s3 sync --delete /tmp/ctfjs-admin/dist s3://actf-admin
+  - name: invalidate cloudfront cache
+    shell: aws cloudfront create-invalidation --distribution-id=E394WSDFCRDYG --paths /

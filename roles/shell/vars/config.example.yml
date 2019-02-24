@@ -1,0 +1,21 @@
+---
+# Disk quotas
+soft_block_limit: 8192
+hard_block_limit: 8192
+soft_inode_limit: 10000
+hard_inode_limit: 10000
+problem_soft_block_limit: 100000
+problem_hard_block_limit: 100000
+problem_soft_inode_limit: 10000
+problem_hard_inode_limit: 10000
+
+# Process limits
+process_limit: 16
+stack_size_limit: 8192 # in kB
+problem_process_limit: 4096
+
+# login limit
+max_logins: 10
+
+hostname: "<hostname>"
+shell_deploy_secret: "<shell deployment server auth>"

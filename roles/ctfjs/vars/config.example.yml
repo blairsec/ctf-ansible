@@ -1,0 +1,30 @@
+---
+cors_origins: "https://example.com,https://admin.example.com"
+secret_key: "..."
+database_uri: "postgresql://db.example.com/ctfjs"
+
+narwhal_url: "https://narwhal.example.com"
+narwhal_auth: "narwhal_authentication_token"
+
+aws_access_key_id: "..."
+aws_secret_access_key: "..."
+aws_region: "us-east-1"
+
+mailtrain_url: "https://mailtrain.example.com"
+mailtrain_list: "<list_id>"
+mailtrain_token: "..."
+
+webdav_url: "https://webdav.example.com"
+webdav_username: "<http basic auth username>"
+webdav_password: "<http basic auth password>"
+files_url: "https://static.example.com"
+
+shell_username: "..."
+shell_password: "..."
+shell_host: "shell.example.com"
+shell_port: 22
+
+shell_deploy_url: "https://deploy.shell.example.com"
+shell_deploy_auth: "..."
+
+ctfjs_url: "api.example.com"

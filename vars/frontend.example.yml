@@ -1,0 +1,6 @@
+---
+api_url: "https://api.example.com"
+shell_url: "shell.example.com"
+web_shell_url: "https://shell.example.com"
+chat_url: "https://kiwiirc.com/client/chat.freenode.net:+6697/?nick=competitor|?#ctfchannel"
+competition_subdomains: 1

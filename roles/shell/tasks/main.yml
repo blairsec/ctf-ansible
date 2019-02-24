@@ -1,0 +1,148 @@
+--- 
+- name: load config
+  include_vars: config.yml
+- name: create teams group
+  group: name=teams state=present
+- name: create problems group
+  group: name=problems state=present
+- name: create problems directory
+  file: path=/problems state=directory owner=root group=root
+- name: copy motd
+  copy: src=motd dest=/etc/motd
+- name: remove default motds
+  shell: rm -rf /etc/update-motd.d/*
+- name: install dependencies
+  apt: package=quota,linux-image-extra-virtual,xinetd,gdb,python3,python3-pip,git,python3-setuptools,python-setuptools update_cache=true state=present
+- name: enable xinetd
+  systemd:
+    name: xinetd
+    state: started
+    enabled: yes
+- name: initiate user quota
+  mount:
+    name: "{{ item.mount }}"
+    src: "{{ item.device }}"
+    fstype: "{{ item.fstype }}"
+    opts: "{{ item.options }},usrquota"
+    state: mounted
+  with_items: "{{ ansible_mounts }}"
+  when: item.mount == '/' and item.options.find("usrquota") == -1
+  register: update_fstab
+- name: prevent process spying
+  mount:
+    path: /proc
+    fstype: proc
+    src: proc
+    opts: hidepid=2
+    state: mounted
+- name: set hostname
+  hostname:
+    name: "{{ hostname }}"
+  register: update_hostname
+- name: set hostname in /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.1\.1'
+    line: '127.0.1.1 {{ hostname }}'
+- name: reboot
+  reboot:
+  when: update_fstab.changed or update_hostname.changed
+- name: create dummy team account
+  user:
+    name: team
+    group: teams
+- name: create dummy problem account
+  user:
+    name: problem
+    group: problems
+- name: setup disk quota database
+  shell: |
+         quotacheck -agum
+         setquota -u team {{ soft_block_limit }} {{ hard_block_limit }} {{ soft_inode_limit }} {{ hard_inode_limit }} /
+         setquota -u problem {{ problem_soft_block_limit }} {{ problem_hard_block_limit }} {{ problem_soft_inode_limit }} {{ problem_hard_inode_limit }} /
+- name: prevent dmesg messages
+  sysctl:
+    name: kernel.dmesg_restrict
+    value: 1
+    state: present
+- name: copy to profile.d
+  copy: src=secure.sh dest=/etc/profile.d/
+- name: restrict processes for teams
+  pam_limits:
+    domain: "@teams"
+    limit_type: hard
+    limit_item: nproc
+    value: "{{ process_limit }}"
+- name: restrict processes for problems
+  pam_limits:
+    domain: "@problems"
+    limit_type: hard
+    limit_item: nproc
+    value: "{{ problem_process_limit }}"
+- name: restrict stack size
+  pam_limits:
+    domain: "@teams"
+    limit_type: hard
+    limit_item: stack
+    value: "{{ stack_size_limit }}"
+- name: restrict max logins
+  pam_limits:
+    domain: "@teams"
+    limit_type: hard
+    limit_item: maxlogins
+    value: "{{ max_logins }}"
+- name: set /home permissions
+  file:
+    path: /home
+    mode: 0711
+- name: set /srv permissions
+  file:
+    path: /srv
+    mode: 0700
+    owner: www-data
+    group: www-data
+- name: install pipenv
+  pip:
+    name: pipenv
+    executable: pip3
+- name: clone shell deployment script
+  git:
+    repo: https://github.com/blairsec/shell
+    dest: /srv/shell
+    force: yes
+- name: install dependencies for shell deployment
+  command: pipenv install
+  args:
+    chdir: /srv/shell
+- name: stop gunicorn servers
+  become: true
+  command: pkill gunicorn
+  ignore_errors: true
+- name: run shell deployment server
+  become: true
+  command: env SHELL_DEPLOY_SECRET={{ shell_deploy_secret }} pipenv run gunicorn --daemon --bind=0.0.0.0 deploy:app
+  args:
+    chdir: /srv/shell
+- name: copy SSHy files
+  copy:
+    src: webshell
+    dest: /srv/
+- name: template index.html
+  template:
+    src: index.html
+    dest: /srv/webshell/index.html
+- name: clone websockify
+  git:
+    repo: https://github.com/novnc/websockify
+    dest: /srv/websockify
+    force: yes
+    version: v0.8.0
+- name: install websockify
+  command: python3 setup.py install
+  args:
+    chdir: /srv/websockify
+- name: stop websockify
+  command: pkill websockify
+  ignore_errors: true
+- name: start websockify
+  command: websockify localhost:5999 localhost:22 -D
