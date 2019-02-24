@@ -1,4 +1,4 @@
-# ctf-ansible
+# ctfjs-ansible
 
 This repository contains ansible playbooks for running a CTF competition with [ctfjs](https://github.com/blairsec/ctfjs). All files ending in `.example` or `.example.yml` will need to be copied into a file without the ".example" and edited.
 
