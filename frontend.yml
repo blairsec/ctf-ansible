@@ -21,7 +21,7 @@
     npm:
       path: /tmp/v-ctf
   - name: build v-ctf
-    shell: cd /tmp/v-ctf && env VUE_APP_API_URL={{ api_url }} VUE_APP_SHELL_URL={{ shell_url }} VUE_APP_WEB_SHELL_URL={{ web_shell_url }} VUE_APP_COMPETITION_SUBDOMAINS={{ competition_subdomains }} npm run build
+    shell: cd /tmp/v-ctf && env VUE_APP_API_URL={{ api_url }} VUE_APP_SHELL_URL={{ shell_url }} VUE_APP_WEB_SHELL_URL={{ web_shell_url }} VUE_APP_CHAT_URL='{{ chat_url }}' VUE_APP_COMPETITION_SUBDOMAINS={{ competition_subdomains }} npm run build
   - name: upload 2018 to s3
     shell: aws s3 sync --delete /tmp/v-ctf/dist s3://actf-2018
   - name: invalidate cloudfront cache
@@ -33,7 +33,7 @@
       src: /tmp/v-ctf-themes/2017/
       dest: /tmp/v-ctf/src/theme
   - name: build v-ctf
-    shell: cd /tmp/v-ctf && env VUE_APP_API_URL={{ api_url }} VUE_APP_SHELL_URL={{ shell_url }} VUE_APP_WEB_SHELL_URL={{ web_shell_url }} VUE_APP_COMPETITION_SUBDOMAINS={{ competition_subdomains }} npm run build
+    shell: cd /tmp/v-ctf && env VUE_APP_API_URL={{ api_url }} VUE_APP_SHELL_URL={{ shell_url }} VUE_APP_WEB_SHELL_URL={{ web_shell_url }} VUE_APP_CHAT_URL='{{ chat_url }}' VUE_APP_COMPETITION_SUBDOMAINS={{ competition_subdomains }} npm run build
   - name: upload 2017 to s3
     shell: aws s3 sync --delete /tmp/v-ctf/dist s3://actf-2017
   - name: invalidate cloudfront cache
