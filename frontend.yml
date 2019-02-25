@@ -1,7 +1,8 @@
 ---
 - hosts: 127.0.0.1
   connection: local
-  include_vars: vars/frontend.yml
+  vars_files:
+    - vars/frontend.yml
   tasks:
   - name: download v-ctf
     git:
@@ -24,7 +25,7 @@
   - name: upload 2018 to s3
     shell: aws s3 sync --delete /tmp/v-ctf/dist s3://actf-2018
   - name: invalidate cloudfront cache
-    shell: aws cloudfront create-invalidation --distribution-id=E14JAZDK72HCIK --paths /
+    shell: aws cloudfront create-invalidation --distribution-id=E14JAZDK72HCIK --paths "/*"
   - name: clear theme
     shell: rm -r /tmp/v-ctf/src/theme/*
   - name: copy 2017 theme
@@ -36,7 +37,7 @@
   - name: upload 2017 to s3
     shell: aws s3 sync --delete /tmp/v-ctf/dist s3://actf-2017
   - name: invalidate cloudfront cache
-    shell: aws cloudfront create-invalidation --distribution-id=E3INZH2590MUAO --paths /
+    shell: aws cloudfront create-invalidation --distribution-id=E3INZH2590MUAO --paths "/*"
   - name: download ctfjs-admin
     git:
       repo: https://github.com/blairsec/ctfjs-admin.git
@@ -50,4 +51,4 @@
   - name: upload admin to s3
     shell: aws s3 sync --delete /tmp/ctfjs-admin/dist s3://actf-admin
   - name: invalidate cloudfront cache
-    shell: aws cloudfront create-invalidation --distribution-id=E394WSDFCRDYG --paths /
+    shell: aws cloudfront create-invalidation --distribution-id=E394WSDFCRDYG --paths "/*"

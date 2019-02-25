@@ -18,6 +18,24 @@
     name: xinetd
     state: started
     enabled: yes
+- name: allow password ssh
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PasswordAuthentication.*no'
+    line: 'PasswordAuthentication=yes'
+- name: allow root ssh
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin.*'
+    line: 'PermitRootLogin yes'
+- name: restart sshd
+  systemd:
+    name: sshd
+    state: reloaded
+- name: set root password
+  user:
+    name: root
+    password: '{{ crypted_root_password }}'
 - name: initiate user quota
   mount:
     name: "{{ item.mount }}"
