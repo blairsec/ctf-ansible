@@ -47,11 +47,11 @@
 
 - name: run narwhal
   become: true
-  shell: (killall gunicorn || true) && cd /src/narwhal && env NARWHAL_SECRET="{{ narwhal_secret }}" gunicorn "narwhal.app:build()" -D
+  shell: (killall gunicorn || true) && cd /src/narwhal && env NARWHAL_SECRET="{{ narwhal_secret }}" gunicorn "narwhal.app:build()" --workers 3 --timeout 120 -D
 
 - name: run nginx-proxy
   become: true
-  shell: docker run -d -p 8001:80 -v /var/run/docker.sock:/tmp/docker.sock:ro jwilder/nginx-proxy || true
+  shell: docker run -d -p 8001:80 -v /var/run/docker.sock:/tmp/docker.sock:ro -l service=narwhal-proxy jwilder/nginx-proxy || true
 
 - name: log in to registry
   become: true

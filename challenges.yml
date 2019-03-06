@@ -21,6 +21,10 @@
         AWS_SECRET_ACCESS_KEY: "{{ aws_secret_access_key }}"
       caddy_config: |
         {{ narwhal_url }} {
+          tls {{ ca_email }} {
+            dns route53
+            wildcard
+          }
           proxy / localhost:8000 {
             transparent
           }
@@ -30,7 +34,7 @@
           proxy / localhost:8001 {
             transparent
           }
-          tls {
+          tls {{ ca_email }} {
             dns route53
           }
         }

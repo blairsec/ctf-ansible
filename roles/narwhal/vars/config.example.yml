@@ -8,3 +8,5 @@ registry_url: "registry.example.com"
 
 aws_access_key_id: "..."
 aws_secret_access_key: "..."
+
+ca_email: "name@example.com"

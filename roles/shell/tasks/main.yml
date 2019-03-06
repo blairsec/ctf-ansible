@@ -12,7 +12,7 @@
 - name: remove default motds
   shell: rm -rf /etc/update-motd.d/*
 - name: install dependencies
-  apt: package=quota,linux-image-extra-virtual,xinetd,gdb,python3,python3-pip,git,python3-setuptools,python-setuptools update_cache=true state=present
+  apt: package=quota,linux-image-extra-virtual,xinetd,gdb,python3,python3-pip,git,python3-setuptools,python-setuptools,gcc-multilib update_cache=true state=present
 - name: enable xinetd
   systemd:
     name: xinetd

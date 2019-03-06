@@ -38,6 +38,18 @@
     shell: aws s3 sync --delete /tmp/v-ctf/dist s3://actf-2017
   - name: invalidate cloudfront cache
     shell: aws cloudfront create-invalidation --distribution-id=E3INZH2590MUAO --paths "/*"
+  - name: clear theme
+    shell: rm -r /tmp/v-ctf/src/theme/*
+  - name: copy 2019 theme
+    copy:
+      src: /tmp/v-ctf-themes/2019/
+      dest: /tmp/v-ctf/src/theme
+  - name: build v-ctf
+    shell: cd /tmp/v-ctf && env VUE_APP_API_URL={{ api_url }} VUE_APP_SHELL_URL={{ shell_url }} VUE_APP_WEB_SHELL_URL={{ web_shell_url }} VUE_APP_CHAT_URL='{{ chat_url }}' VUE_APP_COMPETITION_SUBDOMAINS={{ competition_subdomains }} npm run build
+  - name: upload 2019 to s3
+    shell: aws s3 sync --delete /tmp/v-ctf/dist s3://actf-2019
+  - name: invalidate cloudfront cache
+    shell: aws cloudfront create-invalidation --distribution-id=E3JBWF0HBIW161 --paths "/*"
   - name: download ctfjs-admin
     git:
       repo: https://github.com/blairsec/ctfjs-admin.git
