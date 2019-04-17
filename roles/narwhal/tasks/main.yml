@@ -51,7 +51,7 @@
 
 - name: run nginx-proxy
   become: true
-  shell: docker run -d -p 8001:80 -v /var/run/docker.sock:/tmp/docker.sock:ro -l service=narwhal-proxy jwilder/nginx-proxy || true
+  shell: docker run -d -p 8001:80 -v /var/run/docker.sock:/tmp/docker.sock:ro -l service=narwhal-proxy kmh11/nginx-proxy || true
 
 - name: log in to registry
   become: true
