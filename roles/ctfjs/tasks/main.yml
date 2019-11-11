@@ -5,6 +5,17 @@
   become: true
   shell: curl -sL https://deb.nodesource.com/setup_11.x | bash -
 
+- name: install redis
+  become: true
+  apt:
+    name: redis-server
+
+- name: start redis
+  become: true
+  systemd:
+    state: started
+    name: redis
+
 - name: install nodejs
   become: true
   apt:
@@ -30,4 +41,4 @@
   shell: ctfjs stop || true
 
 - name: run ctfjs
-  shell: ctfjs start -f /src/ctfjs-plugins -o {{ cors_origins }} -e "VERIFY_URL={{ verify_url }};RESET_URL={{ reset_url }};EMAIL_FROM={{ email_from }};NARWHAL_URL={{ narwhal_url }};NARWHAL_AUTH={{ narwhal_auth }};AWS_ACCESS_KEY_ID={{ aws_access_key_id }};AWS_SECRET_ACCESS_KEY={{ aws_secret_access_key }};AWS_REGION={{ aws_region }};MAILTRAIN_URL={{ mailtrain_url }};MAILTRAIN_LIST={{ mailtrain_list }};MAILTRAIN_TOKEN={{ mailtrain_token }};WEBDAV_URL={{ webdav_url }};WEBDAV_USERNAME={{ webdav_username }};WEBDAV_PASSWORD={{ webdav_password }};FILES_URL={{ files_url }};SHELL_USERNAME={{ shell_username }};SHELL_PASSWORD={{ shell_password }};SHELL_HOST={{ shell_host }};SHELL_PORT={{ shell_port }};SHELL_DEPLOY_URL={{ shell_deploy_url }};SHELL_DEPLOY_AUTH={{ shell_deploy_auth }}" -d "{{ database_uri }}" -s "{{ secret_key }}"
+  shell: ctfjs start -f /src/ctfjs-plugins -o {{ cors_origins }} -e "RECAPTCHA_SECRET={{ recaptcha_secret }};VERIFY_URL={{ verify_url }};RESET_URL={{ reset_url }};EMAIL_FROM={{ email_from }};NARWHAL_URL={{ narwhal_url }};NARWHAL_AUTH={{ narwhal_auth }};AWS_ACCESS_KEY_ID={{ aws_access_key_id }};AWS_SECRET_ACCESS_KEY={{ aws_secret_access_key }};AWS_REGION={{ aws_region }};MAILTRAIN_URL={{ mailtrain_url }};MAILTRAIN_LIST={{ mailtrain_list }};MAILTRAIN_TOKEN={{ mailtrain_token }};WEBDAV_URL={{ webdav_url }};WEBDAV_USERNAME={{ webdav_username }};WEBDAV_PASSWORD={{ webdav_password }};FILES_URL={{ files_url }};SHELL_USERNAME={{ shell_username }};SHELL_PASSWORD={{ shell_password }};SHELL_HOST={{ shell_host }};SHELL_PORT={{ shell_port }};SHELL_DEPLOY_URL={{ shell_deploy_url }};SHELL_DEPLOY_AUTH={{ shell_deploy_auth }}" -d "{{ database_uri }}" -s "{{ secret_key }}"

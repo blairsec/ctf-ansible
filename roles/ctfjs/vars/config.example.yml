@@ -28,3 +28,5 @@ shell_deploy_url: "https://deploy.shell.example.com"
 shell_deploy_auth: "..."
 
 ctfjs_url: "api.example.com"
+
+recaptcha_secret: "..."
