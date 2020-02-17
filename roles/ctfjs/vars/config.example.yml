@@ -10,6 +10,10 @@ aws_access_key_id: "..."
 aws_secret_access_key: "..."
 aws_region: "us-east-1"
 
+email_from: "My CTF Team <noreply@example.com>"
+verify_url: "https://<competition>.example.com/verify?token="
+reset_url: "https://<competition>.example.com/resetpassword?token="
+
 mailtrain_url: "https://mailtrain.example.com"
 mailtrain_list: "<list_id>"
 mailtrain_token: "..."

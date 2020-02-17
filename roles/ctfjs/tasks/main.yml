@@ -5,17 +5,6 @@
   become: true
   shell: curl -sL https://deb.nodesource.com/setup_11.x | bash -
 
-- name: install redis
-  become: true
-  apt:
-    name: redis-server
-
-- name: start redis
-  become: true
-  systemd:
-    state: started
-    name: redis
-
 - name: install nodejs
   become: true
   apt:
