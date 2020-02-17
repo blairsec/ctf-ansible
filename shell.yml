@@ -13,7 +13,7 @@
 
 - hosts: shell
   roles:
-    - role: antoiner77.caddy
+    - role: caddy_ansible.caddy_ansible
       vars_files:
         - roles/shell/vars/config.yml
       become: true

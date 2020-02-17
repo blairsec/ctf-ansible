@@ -10,7 +10,7 @@
   vars_files:
     - roles/ctfjs/vars/config.yml
   roles:
-    - role: antoiner77.caddy
+    - role: caddy_ansible.caddy_ansible
       become: true
       caddy_setcap: yes
       caddy_systemd_capabilities_enabled: true
