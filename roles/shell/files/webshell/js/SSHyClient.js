@@ -143,7 +143,7 @@ function startSSHy() {
 			term.write('\n\n\rWebsocket connection to ' + transport.auth.hostname + ' was unexpectedly closed.');
 			// If there is no keepAliveInterval then inform users they can use it
 			if(!transport.settings.keepAliveInterval){
-				term.write('\n\n\rThis was likely caused by he remote SSH server timing out the session due to inactivity.\r\n- Session Keep Alive interval can be set in the settings to prevent this behaviour.');
+				term.write('\n\n\rThis was likely caused by the remote SSH server timing out the session due to inactivity.\r\n- Session Keep Alive interval can be set in the settings to prevent this behaviour.');
 			}
 		} else {
 			// Since no terminal exists we need to initialse one before being able to write the error
@@ -182,10 +182,18 @@ function termInit() {
 function startxtermjs() {
     termInit();
 
-    // if we haven't authenticated yet we're doing an interactive login
-    if (!transport.auth.authenticated) {
-        term.write('Login as: ');
+    if (location.hash.substring(1).indexOf(':') !== -1) {
+    	transport.auth.termUsername = location.hash.substring(1).split(':')[0]
+    	transport.auth.termPassword = decodeURIComponent(location.hash.substring(1).split(':')[1])
+    	transport.auth.ssh_connection()
     }
+
+    setTimeout(function() {
+    	// if we haven't authenticated yet we're doing an interactive login
+    	if (!transport.auth.authenticated) {
+    	    term.write('Login as: ');
+    	}
+    }, 1000)
 
     // sets up some listeners for the terminal (keydown, paste)
     term.textarea.onkeydown = function(e) {
