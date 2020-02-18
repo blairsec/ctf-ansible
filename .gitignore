@@ -3,3 +3,4 @@
 config.yml
 vars/frontend.yml
 motd
+closure-compiler-v20200204.jar

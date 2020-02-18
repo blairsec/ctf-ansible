@@ -234,7 +234,7 @@ function startxtermjs() {
                     break;
                 case 13: // enter
                     if (transport.auth.termPassword === undefined) {
-                        term.write("\n\r" + transport.auth.termUsername + '@' + transport.auth.hostname + '\'s password:');
+                        term.write("\n\r" + transport.auth.termUsername + '@' + transport.auth.hostname + '\'s password: ');
                         transport.auth.termPassword = '';
                     } else {
                         term.write('\n\r');
